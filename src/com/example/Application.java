@@ -7,6 +7,7 @@ import com.example.model.Customers;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.List;
 
@@ -17,6 +18,19 @@ public class Application {
         customers.setCustomers(customerList);
 
         outputToFile("resources/output.xml", customers);
+        readFromFile("resources/output.xml");
+    }
+
+    private static void readFromFile(String filename) throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(Customers.class);
+        Unmarshaller unmarshaller = context.createUnmarshaller();
+        File file = new File(filename);
+
+        Customers customers = (Customers) unmarshaller.unmarshal(file);
+
+        for (Customer customer : customers.getCustomers()) {
+            System.out.println(customer);
+        }
     }
 
     private static void outputToFile(String filename, Customers customers) throws JAXBException {
